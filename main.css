@@ -8,8 +8,13 @@ body {
     margin: 0 auto;
 }
 
+#threshold {
+    display: block;
+    margin: 30px auto;
+    width: 90%;
+}
+
 .btn-wrapper {
-    padding-top: 30px;
     display: block;
     text-align: center;
 }

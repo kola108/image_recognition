@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', DOMLoaded, false);
 
 function DOMLoaded(){
 
-    function DCanvas(canvas) {
+    /*function DCanvas(canvas) {
         const ctx = canvas.getContext('2d');
         const pixel = 20;
 
@@ -160,7 +160,65 @@ function DOMLoaded(){
         //network result
         const result = brain.likely(d.calculate(), net);
         alert(result);
+    }*/
+
+
+
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const image = new Image();
+    const height = 300;
+    const width = 400;
+    let threshold = 100;
+    let resultArr = [];
+
+    const rangeInput = document.getElementById('threshold');
+    rangeInput.addEventListener('mousemove',() => {
+        threshold = rangeInput.value;
+        onImageLoad();
+    });
+
+    const resultBtn = document.getElementById('result');
+    resultBtn.addEventListener('click', () => {
+       console.log(resultArr);
+    });
+
+    image.src = './400.jpg';
+    canvas.width = width;
+    canvas.height = height;
+
+    function onImageLoad() {
+        let tempArr = [];
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        const pixelData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < pixelData.data.length; i += 4) {
+            const r = pixelData.data[i];
+            const g = pixelData.data[i + 1];
+            const b = pixelData.data[i + 2];
+            const bright = (r + g + b)/3;
+
+            if (bright > threshold) {
+                pixelData.data[i] = 255;
+                pixelData.data[i + 1] = 255;
+                pixelData.data[i + 2] = 255;
+                tempArr.push(0);
+            } else {
+                pixelData.data[i] = 0;
+                pixelData.data[i + 1] = 0;
+                pixelData.data[i + 2] = 0;
+                tempArr.push(1);
+            }
+        }
+
+        ctx.putImageData(pixelData, 0, 0);
+        resultArr = tempArr;
     }
 
+    image.onload = () => {
+        onImageLoad();
+    }
 
 }
